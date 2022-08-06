@@ -53,7 +53,7 @@ const MovieCards = () => {
 
   const ticketHandler = () => {
     setTicketDetails({ ...ticketDetails, time });
-        if (ticketDetails.time === "") {
+    if (ticketDetails.time === "") {
       alert("please choose show time!!");
       return;
     } else {
