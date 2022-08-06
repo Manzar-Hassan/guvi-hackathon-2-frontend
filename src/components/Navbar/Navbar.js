@@ -1,8 +1,12 @@
 import React from "react";
 import { AppBar, Avatar, Box, Stack, Toolbar, Typography } from "@mui/material";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
+import UserContext from "../../context/UserContext";
+import { useContext } from "react";
 
 const Navbar = () => {
+  const { loginUser } = useContext(UserContext);
+
   return (
     <AppBar sx={{ background: "#000", position: "sticky" }}>
       <Toolbar>
@@ -14,6 +18,7 @@ const Navbar = () => {
             alignItems: "center",
           }}
         >
+          {console.log("value from context", loginUser)}
           <LiveTvIcon fontSize="large" />
           <Typography marginLeft={2}>Live Tv</Typography>
         </Box>
@@ -25,7 +30,7 @@ const Navbar = () => {
             src="https://picsum.photos/50/50"
             sx={{ height: "2rem", width: "2rem" }}
           />
-          <Typography>Admin</Typography>
+          <Typography>{loginUser}</Typography>
         </Stack>
       </Toolbar>
     </AppBar>

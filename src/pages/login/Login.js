@@ -9,13 +9,14 @@ import {
   Avatar,
   Box,
   Typography,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../../context/UserContext";
 
 const Login = () => {
   const [values, setValues] = useState(false);
@@ -32,6 +33,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const { setLoginUser, setIsLoggedIn } = useContext(UserContext)
 
   const errorHandler = () => {
     let error = "";
@@ -70,6 +72,8 @@ const Login = () => {
       const notification = await axios.post(url, credentials);
       setLoading(false);
       if (notification) {
+        setLoginUser(credentials.username)
+        setIsLoggedIn(true)
         navigate("/movies");
       }
     } catch (error) {
@@ -150,11 +154,7 @@ const Login = () => {
 
                 <Grid item>
                   <Button type="submit" fullWidth variant="contained">
-                    {loading ? (
-                      <CircularProgress color="primary" />
-                    ) : (
-                      "Sign In"
-                    )}
+                    {loading ? <CircularProgress color="inherit" /> : "Sign In"}
                   </Button>
                 </Grid>
               </Grid>
