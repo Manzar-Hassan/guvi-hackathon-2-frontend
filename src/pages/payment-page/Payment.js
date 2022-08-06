@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Container,
   Button,
@@ -11,10 +13,38 @@ import {
 } from "@mui/material";
 
 const Payment = () => {
-  const [success, setSuccess] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <div className="bg-secondary">
@@ -54,7 +84,7 @@ const Payment = () => {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    onClick={() => setSuccess(true)}
+                    onClick={handleClick}
                   >
                     Proceed to Pay
                   </Button>
@@ -65,11 +95,11 @@ const Payment = () => {
         </Grid>
       </Container>
       <Snackbar
-        open={success}
-        onClose={()=>setSuccess(false)}
-        TransitionComponent="TransitionLeft"
-        message="Payment Successful !!"
-        key="Grow"
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Payment Successful!!"
+        action={action}
       />
     </div>
   );
