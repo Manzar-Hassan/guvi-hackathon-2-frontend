@@ -18,7 +18,6 @@ const Navbar = () => {
             alignItems: "center",
           }}
         >
-          {console.log("value from context", loginUser)}
           <LiveTvIcon fontSize="large" />
           <Typography marginLeft={2}>Live Tv</Typography>
         </Box>
