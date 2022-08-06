@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Box,
   Button,
@@ -13,6 +13,7 @@ import {
 import Navbar from "../Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../../context/UserContext";
 
 const style = {
   position: "absolute",
@@ -32,6 +33,7 @@ const MovieCards = () => {
   const [time, setTime] = useState("");
   const [movies, setmovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { ticketDetails, setTicketDetails } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -47,6 +49,21 @@ const MovieCards = () => {
     } catch (error) {
       alert(error);
     }
+  };
+
+  const ticketHandler = () => {
+    setTicketDetails({ ...ticketDetails, time });
+        if (ticketDetails.time === "") {
+      alert("please choose show time!!");
+      return;
+    } else {
+      navigate("/tickets");
+    }
+  };
+
+  const modalHandler = (e) => {
+    setTicketDetails({ ...ticketDetails, name: e.target.id });
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -84,8 +101,9 @@ const MovieCards = () => {
                           <Typography fontWeight="bold">(Rs.250)</Typography>
                         </Typography>
                         <Button
+                          id={movie.title}
                           variant="contained"
-                          onClick={() => setOpen(true)}
+                          onClick={modalHandler}
                         >
                           Book
                         </Button>
@@ -135,7 +153,7 @@ const MovieCards = () => {
                 <MenuItem value="7:30 PM">7:30 PM</MenuItem>
                 <MenuItem value="10:15 PM">10:15 PM</MenuItem>
               </TextField>
-              <Button variant="contained" onClick={() => navigate("/tickets")}>
+              <Button variant="contained" onClick={ticketHandler}>
                 confirm
               </Button>
             </Stack>
