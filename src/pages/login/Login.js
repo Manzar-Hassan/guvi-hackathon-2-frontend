@@ -9,6 +9,7 @@ import {
   Avatar,
   Box,
   Typography,
+  CircularProgress
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -18,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [values, setValues] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [userError, setUserError] = useState({
     msg: "",
     error: false,
@@ -29,7 +31,7 @@ const Login = () => {
     password: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const errorHandler = () => {
     let error = "";
@@ -62,13 +64,14 @@ const Login = () => {
   const authenticateUser = async (e) => {
     e.preventDefault();
     const url = "https://manzar-05.herokuapp.com/login";
+    setLoading(true);
 
     try {
       const notification = await axios.post(url, credentials);
-      if(notification) {
-        navigate("/movies")
+      setLoading(false);
+      if (notification) {
+        navigate("/movies");
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -147,7 +150,11 @@ const Login = () => {
 
                 <Grid item>
                   <Button type="submit" fullWidth variant="contained">
-                    Sign In
+                    {loading ? (
+                      <CircularProgress color="primary" />
+                    ) : (
+                      "Sign In"
+                    )}
                   </Button>
                 </Grid>
               </Grid>

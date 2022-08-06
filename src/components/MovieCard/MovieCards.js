@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,10 +6,13 @@ import {
   TextField,
   Typography,
   MenuItem,
+  CircularProgress,
   Stack,
+  Toolbar,
 } from "@mui/material";
 import Navbar from "../Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -27,45 +30,74 @@ const style = {
 const MovieCards = () => {
   const [open, setOpen] = useState(false);
   const [time, setTime] = useState("");
-  const navigate = useNavigate()
+  const [movies, setmovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setTime(event.target.value);
   };
 
+  const getMovies = async () => {
+    const url = "https://manzar-05.herokuapp.com/";
+
+    try {
+      await axios.get(url).then(({ data }) => setmovies(data));
+      setLoading(false);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  useEffect(() => {
+    getMovies();
+  }, []);
+
   return (
     <>
-    <Navbar/>
-      <section className="py-5 bg-secondary">
-        <div className="container px-4 px-lg-5 mt-5">
-          <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            <div className="col mb-5">
-              <div className="card">
-                <img
-                  className="card-img-top"
-                  src="https://englishtribuneimages.blob.core.windows.net/gallary-content/2021/6/Desk/2021_6$largeimg_977224513.JPG"
-                  alt="product"
-                />
-                <div className="card-body p-4">
-                  <div className="text-center">
-                    <Typography
-                      variant="h6"
-                      component="h2"
-                      fontWeight="bold"
-                      mb={1}
-                    >
-                      mal <Typography fontWeight="bold">(Rs.250)</Typography>
-                    </Typography>
-                    <Button variant="contained" onClick={() => setOpen(true)}>
-                      Book
-                    </Button>
+      <Navbar />
+      {loading ? (
+        <Toolbar>
+          <CircularProgress color="secondary" className="mx-auto" />
+        </Toolbar>
+      ) : (
+        <section className="py-5 bg-secondary">
+          <div className="container px-4 px-lg-5 mt-5">
+            <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+              {movies.map((movie) => (
+                <div className="col mb-5">
+                  <div className="card">
+                    <img
+                      className="card-img-top"
+                      src={movie.posterUrl}
+                      alt="product"
+                    />
+                    <div className="card-body p-4">
+                      <div className="text-center">
+                        <Typography
+                          variant="h6"
+                          component="h2"
+                          fontWeight="bold"
+                          mb={1}
+                        >
+                          {movie.title}
+                          <Typography fontWeight="bold">(Rs.250)</Typography>
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          onClick={() => setOpen(true)}
+                        >
+                          Book
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
       <div>
         <Modal
           open={open}
@@ -103,7 +135,7 @@ const MovieCards = () => {
                 <MenuItem value="7:30 PM">7:30 PM</MenuItem>
                 <MenuItem value="10:15 PM">10:15 PM</MenuItem>
               </TextField>
-              <Button variant="contained" onClick={()=>navigate("/tickets")}>
+              <Button variant="contained" onClick={() => navigate("/tickets")}>
                 confirm
               </Button>
             </Stack>
