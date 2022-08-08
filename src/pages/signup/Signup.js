@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"
+import axios from "axios";
 
 const Signup = () => {
   const [signDetails, setSignDetails] = useState({
@@ -23,7 +23,7 @@ const Signup = () => {
     setSignDetails({ ...signDetails, [e.target.name]: e.target.value });
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const createUser = async (e) => {
     e.preventDefault();
@@ -31,25 +31,24 @@ const Signup = () => {
 
     if (signDetails.username.length < 5) {
       alert("username cannot be smaller than 5 characters!!");
+      // setSignDetails({ ...signDetails, username: "" });
       setSignDetails({ ...signDetails, username: "" });
       return;
-
     } else if (signDetails.password.length < 8) {
       alert("Password cannot be smaller than 8 characters!!");
       setSignDetails({ ...signDetails, password: "" });
       return;
-
-    }else if (signDetails.password !== signDetails.confirmPass) {
+    } else if (signDetails.password !== signDetails.confirmPass) {
       alert("password doesn't match!!");
-      setSignDetails({ ...signDetails, password: "", confirmPass:"" });
+      setSignDetails({ ...signDetails, password: "", confirmPass: "" });
       return;
     }
 
     try {
-      await axios.post(url,signDetails).then(({data})=> alert(data.msg))
-      navigate("/movies")
+      await axios.post(url, signDetails).then(({ data }) => alert(data.msg));
+      navigate("/login");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -85,7 +84,7 @@ const Signup = () => {
                     name="username"
                     required
                     onChange={detailHandler}
-                    value={setSignDetails.username}
+                    value={signDetails.username}
                   />
                 </Grid>
 
@@ -97,7 +96,7 @@ const Signup = () => {
                     variant="outlined"
                     name="password"
                     onChange={detailHandler}
-                    value={setSignDetails.password}
+                    value={signDetails.password}
                     required
                   />
                 </Grid>
@@ -110,7 +109,7 @@ const Signup = () => {
                     variant="outlined"
                     name="confirmPass"
                     onChange={detailHandler}
-                    value={setSignDetails.confirmPass}
+                    value={signDetails.confirmPass}
                     required
                   />
                 </Grid>
