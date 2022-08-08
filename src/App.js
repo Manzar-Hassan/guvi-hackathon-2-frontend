@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MovieCards from "./components/MovieCard/MovieCards";
+import MovieCards from "./pages/movie-page/Movies";
 import ProtectedRoute from "./components/protected-route/ProtectedRoute";
 import ContactUs from "./pages/contactUs/ContactUs";
 import Login from "./pages/login/Login";
@@ -10,7 +10,6 @@ import Ticket from "./pages/Ticket-page/Ticket";
 import { UserProvider } from "./context/UserContext";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <UserProvider>

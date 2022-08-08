@@ -9,6 +9,7 @@ export function UserProvider({ children }) {
     name: "",
     time: "",
     quantity: 0,
+    ticketId:[],
     total: 0,
   });
 

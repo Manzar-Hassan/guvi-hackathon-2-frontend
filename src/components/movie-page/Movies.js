@@ -10,7 +10,7 @@ import {
   Stack,
   Toolbar,
 } from "@mui/material";
-import Navbar from "../Navbar/Navbar";
+import Navbar from "../../components/Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
