@@ -30,6 +30,7 @@ const Ticket = () => {
   const [loading, setLoading] = useState(true);
   const [prevUserWarning, setPrevUserWarning] = useState("");
   const { ticketDetails, setTicketDetails } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const getSeatsInfo = async () => {
     const url = "https://manzar-05.herokuapp.com/theatre";
@@ -61,6 +62,7 @@ const Ticket = () => {
           ...ticketDetails,
           quantity: ticketDetails.quantity + 1,
           ticketId: [...ticketDetails.ticketId, id],
+          total: ticketDetails.total + 250,
         });
       } else {
         const filteredId = ticketDetails.ticketId.filter(
@@ -70,6 +72,7 @@ const Ticket = () => {
           ...ticketDetails,
           quantity: ticketDetails.quantity - 1,
           ticketId: [...filteredId],
+          total: ticketDetails.total - 250,
         });
       }
     } catch (error) {
@@ -77,25 +80,21 @@ const Ticket = () => {
     }
   };
 
-  const getData = () => {
-    const data = ticketDetails.ticketId;
-    return data;
-  };
+  const seatConfirmhandler = async () => {
+    const selectedSeats = ticketDetails.ticketId;
+    const status = { status: true };
+    const url = `https://manzar-05.herokuapp.com/theatre/`;
 
-  const seatsResetHandler = async () => {
-    const url = "https://manzar-05.herokuapp.com/resetSeats";
-    const data = getData();
+    setLoading(true);
+    clearTimeout(prevUserWarning);
 
     try {
-      setLoading(true);
-      await axios.post(url, data);
-      setTicketDetails({
-        ...ticketDetails,
-        quantity: 0,
-        ticketId: [],
-      });
+      for (let i = 0; i < selectedSeats.length; i++) {
+        await axios.put(url + selectedSeats[i], status);
+      }
       getSeatsInfo();
       setLoading(false);
+      navigate("/payment")
     } catch (error) {
       console.log(error);
     }
@@ -105,9 +104,8 @@ const Ticket = () => {
     clearTimeout(prevUserWarning);
 
     const prevMsg = setTimeout(() => {
-      alert("Seats will reset!!");
-      seatsResetHandler();
-    }, 3000);
+      alert("Please confirm seats!!");
+    }, 10000);
 
     setPrevUserWarning(prevMsg);
   };
@@ -116,7 +114,6 @@ const Ticket = () => {
     getSeatsInfo();
   }, []);
 
-  const navigate = useNavigate();
   return (
     <div style={{ background: "#f1f3f5" }}>
       <Navbar />
@@ -231,15 +228,32 @@ const Ticket = () => {
             alignItems: "center",
           }}
         >
-          <Input defaultValue="Seats booked" sx={{ color: "#fff" }} disabled />
-          <Input defaultValue="Total Amount" sx={{ color: "#fff" }} disabled />
+          <Input
+            component="div"
+            value={
+              ticketDetails.quantity
+                ? `Quantiity: ${ticketDetails.quantity}`
+                : "No. of seats"
+            }
+            sx={{ fontWeight: "bold" }}
+            disabled
+          />
+          <Input
+            value={
+              ticketDetails.total
+                ? `Rs. ${ticketDetails.total}`
+                : "Total Amount"
+            }
+            sx={{ fontWeight: "bold" }}
+            disabled
+          />
           <Stack direction="row" gap={2} mb={5}>
             <Button
               variant="contained"
               sx={{
                 marginTop: "50px",
               }}
-              onClick={() => navigate("/payment")}
+              onClick={seatConfirmhandler}
             >
               Confirm Seats
             </Button>

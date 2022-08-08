@@ -11,46 +11,25 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// <ToastContainer />
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import React, { useContext, useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
+import axios from "axios";
 
 const Login = () => {
   const [values, setValues] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userError, setUserError] = useState({
-    msg: "",
-    error: false,
-    passmsg: "",
-    passErr: false,
-  });
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
-
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn } = useContext(UserContext)
-
-  const errorHandler = () => {
-    let error = "";
-    if (credentials.username.length < 5) {
-      error = "username must be greater than 4 characters";
-      setUserError({ ...userError, msg: error, error: true });
-    } else if (credentials.username.length > 5) {
-      error = "";
-      setUserError({ ...userError, msg: error, error: false });
-    } else if (credentials.password.length < 8) {
-      error = "password must be more than 8 characters long!!";
-      setUserError({ ...userError, passmsg: error, passErr: true });
-    } else if (credentials.password.length > 8) {
-      error = "";
-      setUserError({ ...userError, passmsg: error, passErr: false });
-    }
-  };
+  const { setLoginUser, setIsLoggedIn } = useContext(UserContext);
 
   const handlePassVisibilty = () => {
     setValues(!values);
@@ -63,18 +42,34 @@ const Login = () => {
     });
   };
 
-  const authenticateUser = async (e) => {
+  const checkFormError = async (e) => {
     e.preventDefault();
     const url = "https://manzar-05.herokuapp.com/login";
+
+    if (credentials.username.length < 5) {
+      alert("username cannot be smaller than 5 characters!!");
+      setCredentials({ ...credentials, username: "" });
+      return;
+    } else if (credentials.password.length < 8) {
+      alert("Password cannot be smaller than 8 characters!!");
+      setCredentials({ ...credentials, password: "" });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const notification = await axios.post(url, credentials);
+      const data = await axios.post(url, credentials);
       setLoading(false);
-      if (notification) {
-        setLoginUser(credentials.username)
-        setIsLoggedIn(true)
+      console.log(data)
+      if (data.status===200) {
+        setLoginUser(credentials.username);
+        setIsLoggedIn(true);
         navigate("/movies");
+
+      } else {
+        setLoading(false);
+        alert("Incorrect Credentials!!")
       }
     } catch (error) {
       console.log(error);
@@ -82,8 +77,10 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-secondary">
+    <Box sx={{ background: "#212529", minHeight: "100vh" }}>
       <Container maxWidth="sm">
+        {console.log(credentials)}
+        {console.log(credentials.username.length)}
         <Grid
           container
           spacing={2}
@@ -101,20 +98,17 @@ const Login = () => {
                 }}
               />
             </Box>
-            <form onSubmit={authenticateUser}>
+            <form onSubmit={checkFormError}>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <TextField
                     type="text"
                     name="username"
-                    error={userError.error}
                     fullWidth
                     label="username"
                     variant="outlined"
                     value={credentials.username}
-                    helperText={userError.msg}
                     onChange={handleChange}
-                    onBlur={errorHandler}
                     required
                   />
                 </Grid>
@@ -123,14 +117,11 @@ const Login = () => {
                   <TextField
                     type={values ? "text" : "password"}
                     fullWidth
-                    onBlur={errorHandler}
-                    error={userError.passErr}
                     label="Password"
                     value={credentials.password}
                     name="password"
                     onChange={handleChange}
                     variant="outlined"
-                    helperText={userError.passmsg}
                     required
                     InputProps={{
                       endAdornment: (
@@ -167,7 +158,7 @@ const Login = () => {
           </Paper>
         </Grid>
       </Container>
-    </div>
+    </Box>
   );
 };
 

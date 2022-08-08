@@ -19,49 +19,31 @@ const Signup = () => {
     confirmPass: "",
   });
 
-  const [userError, setUserError] = useState({
-    msg: "",
-    error: false,
-    passmsg: "",
-    passErr: false,
-    conmsg: "",
-    conErr: false,
-  });
-
   const detailHandler = (e) => {
     setSignDetails({ ...signDetails, [e.target.name]: e.target.value });
   };
 
   const navigate = useNavigate()
 
-  const errorHandler = () => {
-    let error = "";
-    if (signDetails.username.length < 5) {
-      error = "username must be greater than 4 characters";
-      setUserError({ ...userError, msg: error, error: true });
-    } else if (signDetails.username.length > 5) {
-      error = "";
-      setUserError({ ...userError, msg: error, error: false });
-    } else if (signDetails.password.length < 8) {
-      error = "password must be more than 8 characters long!!";
-      setUserError({ ...userError, passmsg: error, passErr: true });
-    } else if (signDetails.password.length > 8) {
-      error = "";
-      setUserError({ ...userError, passmsg: error, passErr: false });
-      }else if (signDetails.confirmPass.length < 8) {
-        error = "password must be more than 8 characters long!!";
-        setUserError({ ...userError, conmsg: error, confirmPass: true });
-      } else if (signDetails.confirmPass.length > 8) {
-        error = "";
-        setUserError({ ...userError, conmsg: error, confirmPass: false });
-      } else if (signDetails.confirmPass !==signDetails.password ) {
-        alert("Password doesn't match!!")
-    }
-  };
-
   const createUser = async (e) => {
     e.preventDefault();
     const url = "https://manzar-05.herokuapp.com/signup";
+
+    if (signDetails.username.length < 5) {
+      alert("username cannot be smaller than 5 characters!!");
+      setSignDetails({ ...signDetails, username: "" });
+      return;
+
+    } else if (signDetails.password.length < 8) {
+      alert("Password cannot be smaller than 8 characters!!");
+      setSignDetails({ ...signDetails, password: "" });
+      return;
+
+    }else if (signDetails.password !== signDetails.confirmPass) {
+      alert("password doesn't match!!");
+      setSignDetails({ ...signDetails, password: "", confirmPass:"" });
+      return;
+    }
 
     try {
       await axios.post(url,signDetails).then(({data})=> alert(data.msg))
@@ -74,6 +56,7 @@ const Signup = () => {
   return (
     <div className="bg-secondary">
       <Container maxWidth="sm">
+        {console.log(signDetails)}
         <Grid
           container
           spacing={2}
@@ -103,9 +86,6 @@ const Signup = () => {
                     required
                     onChange={detailHandler}
                     value={setSignDetails.username}
-                    onBlur={errorHandler}
-                    error={userError.error}
-                    helperText={userError.msg}
                   />
                 </Grid>
 
@@ -118,9 +98,6 @@ const Signup = () => {
                     name="password"
                     onChange={detailHandler}
                     value={setSignDetails.password}
-                    onBlur={errorHandler}
-                    error={userError.passErr}
-                    helperText={userError.passmsg}
                     required
                   />
                 </Grid>
@@ -134,9 +111,6 @@ const Signup = () => {
                     name="confirmPass"
                     onChange={detailHandler}
                     value={setSignDetails.confirmPass}
-                    onBlur={errorHandler}
-                    error={userError.conErr}
-                    helperText={userError.conmsg}
                     required
                   />
                 </Grid>

@@ -11,6 +11,7 @@ export function UserProvider({ children }) {
     quantity: 0,
     ticketId:[],
     total: 0,
+    screen: "Screen-1"
   });
 
   return (
