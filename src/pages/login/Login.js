@@ -26,7 +26,7 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn, setIsAdmin, loginUser } =
+  const { setLoginUser, setIsLoggedIn } =
     useContext(UserContext);
 
   const handlePassVisibilty = () => {
@@ -61,7 +61,6 @@ const Login = () => {
       setLoading(false);
       if (data.status === 200) {
         setLoginUser(credentials.username);
-        loginUser === "manzar" ? setIsAdmin(true) : setIsAdmin(false);
         setIsLoggedIn(true);
         navigate("/movies");
       } else {

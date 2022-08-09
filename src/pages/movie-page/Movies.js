@@ -9,7 +9,12 @@ import {
   CircularProgress,
   Stack,
   Toolbar,
+  Tooltip,
+  Fab,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import Navbar from "../../components/Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -32,7 +37,16 @@ const MovieCards = () => {
   const [open, setOpen] = useState(false);
   const [movies, setmovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { ticketDetails, setTicketDetails } = useContext(UserContext);
+  const [addLoading, setAddLoading] = useState(false);
+  const [editMovie, setEditMovie] = useState({
+    state: false,
+    name: "",
+    id: "",
+    poster: "",
+    cost: 0,
+  });
+  const { ticketDetails, setTicketDetails, loginUser } =
+    useContext(UserContext);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -59,9 +73,40 @@ const MovieCards = () => {
     }
   };
 
+  const addTicketData = (e) => {
+    setEditMovie({ ...editMovie, [e.target.name]: e.target.value });
+  };
+
+  const addTicketHandler = async () => {
+    const url = "https://manzar-05.herokuapp.com/add-movie";
+    setAddLoading(true);
+
+    try {
+      await axios.post(url, editMovie);
+      setAddLoading(false);
+      getMovies();
+      setEditMovie({ ...editMovie, state: false });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const modalHandler = (e) => {
     setTicketDetails({ ...ticketDetails, name: e.target.id });
     setOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    const url = `https://manzar-05.herokuapp.com/movies/${id}`;
+    setLoading(true)
+
+    try {
+      await axios.delete(url);
+      getMovies();
+      setLoading(false)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -77,7 +122,6 @@ const MovieCards = () => {
         </Toolbar>
       ) : (
         <section className="py-5" style={{ background: "#212529" }}>
-          {console.log(ticketDetails)}
           <div className="container px-4 px-lg-5 mt-5">
             <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
               {movies.map((movie) => (
@@ -108,6 +152,14 @@ const MovieCards = () => {
                         >
                           Book
                         </Button>
+                        <IconButton
+                          aria-label="delete"
+                          size="large"
+                          color="error"
+                          onClick={() => handleDelete(movie.id)}
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
                       </div>
                     </div>
                   </div>
@@ -160,6 +212,97 @@ const MovieCards = () => {
             </Stack>
           </Box>
         </Modal>
+        {/* Edit movie section */}
+        <Modal
+          open={editMovie.state}
+          onClose={() => setEditMovie({ ...editMovie, state: false })}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              className="text-center mb-3"
+            >
+              Add Movie
+            </Typography>
+            <Stack
+              sx={{
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                gap: 2,
+              }}
+            >
+              <TextField
+                type="text"
+                name="id"
+                size="small"
+                label="Movie ID"
+                variant="outlined"
+                value={editMovie.id}
+                onChange={addTicketData}
+                required
+              />
+              <TextField
+                type="text"
+                name="name"
+                size="small"
+                label="Movie Name"
+                variant="outlined"
+                value={editMovie.name}
+                onChange={addTicketData}
+                required
+              />
+              <TextField
+                type="text"
+                name="poster"
+                size="small"
+                label="Movie Poster URL"
+                variant="outlined"
+                value={editMovie.poster}
+                onChange={addTicketData}
+                required
+              />
+              <TextField
+                type="text"
+                name="cost"
+                size="small"
+                label="Movie Ticket Price"
+                variant="outlined"
+                value={editMovie.cost}
+                onChange={addTicketData}
+                required
+              />
+              {addLoading ? (
+                <CircularProgress color="primary" />
+              ) : (
+                <Button variant="contained" onClick={addTicketHandler}>
+                  Add
+                </Button>
+              )}
+            </Stack>
+          </Box>
+        </Modal>
+        {loginUser === "manzar" ? (
+          <Tooltip
+            title="Delete"
+            onClick={(e) => setEditMovie({ ...editMovie, state: true })}
+            sx={{
+              position: "fixed",
+              bottom: 20,
+              left: { xs: "calc(50% - 25px)", md: 30 },
+            }}
+          >
+            <Fab color="primary" aria-label="add">
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
