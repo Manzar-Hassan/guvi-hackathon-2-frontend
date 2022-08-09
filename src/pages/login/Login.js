@@ -26,7 +26,7 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn } =
+  const { setLoginUser, setIsLoggedIn, ticketDetails, setTicketDetails } =
     useContext(UserContext);
 
   const handlePassVisibilty = () => {
@@ -34,6 +34,10 @@ const Login = () => {
   };
 
   const handleChange = (e) => {
+    if (e.target.name === "username") {
+      setTicketDetails({ ...ticketDetails, username: e.target.value });
+    }
+
     setCredentials({
       ...credentials,
       [e.target.name]: e.target.value,

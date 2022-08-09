@@ -21,13 +21,13 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import Navbar from "../../components/Navbar/Navbar";
 import CircleIcon from "@mui/icons-material/Circle";
 import SquareIcon from "@mui/icons-material/Square";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import UserContext from "../../context/UserContext";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -37,10 +37,11 @@ const style = {
 
 const Ticket = () => {
   const [seats, setSeats] = useState([]);
+  const [allTickets, setAllTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reservedUsers, setReservedUsers] = useState(false);
   const [prevUserWarning, setPrevUserWarning] = useState("");
-  const { ticketDetails, setTicketDetails, loginUser } =
+  const { ticketDetails, setTicketDetails, loginUser, ticketCost } =
     useContext(UserContext);
   const navigate = useNavigate();
 
@@ -75,7 +76,7 @@ const Ticket = () => {
           ...ticketDetails,
           quantity: ticketDetails.quantity + 1,
           ticketId: [...ticketDetails.ticketId, id],
-          total: ticketDetails.total + 250,
+          total: ticketDetails.total + ticketCost,
         });
       } else {
         const filteredId = ticketDetails.ticketId.filter(
@@ -85,7 +86,7 @@ const Ticket = () => {
           ...ticketDetails,
           quantity: ticketDetails.quantity - 1,
           ticketId: [...filteredId],
-          total: ticketDetails.total - 250,
+          total: ticketDetails.total - ticketCost,
         });
       }
     } catch (error) {
@@ -97,8 +98,8 @@ const Ticket = () => {
     const selectedSeats = ticketDetails.ticketId;
     const status = { status: true };
     const url = `https://manzar-05.herokuapp.com/theatre/`;
+    const ticketURL = "https://manzar-05.herokuapp.com/add-ticket";
 
-    setTicketDetails({ ...ticketDetails, username: loginUser });
     setLoading(true);
     clearTimeout(prevUserWarning);
 
@@ -106,6 +107,7 @@ const Ticket = () => {
       for (let i = 0; i < selectedSeats.length; i++) {
         await axios.put(url + selectedSeats[i], status);
       }
+      await axios.post(ticketURL, ticketDetails);
       getSeatsInfo();
       setLoading(false);
       navigate("/payment");
@@ -123,6 +125,20 @@ const Ticket = () => {
 
     setPrevUserWarning(prevMsg);
   };
+
+  const getTicketsDetails = async () => {
+    const url = "https://manzar-05.herokuapp.com/tickets";
+
+    try {
+      await axios.get(url).then(({ data }) => setAllTickets(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTicketsDetails();
+  }, []);
 
   useEffect(() => {
     getSeatsInfo();
@@ -153,8 +169,6 @@ const Ticket = () => {
             Screen-1
           </Typography>
         </Toolbar>
-        {console.log(ticketDetails)}
-
         <Box
           sx={{
             justifyContent: "center",
@@ -332,24 +346,27 @@ const Ticket = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  aaa
-                </TableCell>
-                <TableCell align="center">bbb</TableCell>
-                <TableCell align="center">ccc</TableCell>
-                <TableCell align="center">ccc</TableCell>
-                <TableCell align="center">ccc</TableCell>
-              </TableRow>
+              {allTickets.map((ticket) => (
+                <TableRow
+                  key={ticket._id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="center">{ticket.username}</TableCell>
+                  <TableCell align="center">{ticket.quantity}</TableCell>
+                  <TableCell align="center">{ticket.name}</TableCell>
+                  <TableCell align="center">
+                    {ticket.ticketId}
+                  </TableCell>
+                  <TableCell align="center">{ticket.total}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Modal>
       {loginUser === "manzar" ? (
         <Tooltip
-          title="Delete"
+          title="Tickets info"
           onClick={() => setReservedUsers(true)}
           sx={{
             position: "fixed",
@@ -358,7 +375,7 @@ const Ticket = () => {
           }}
         >
           <Fab color="primary" aria-label="add">
-            <AddIcon />
+            <RemoveRedEyeIcon />
           </Fab>
         </Tooltip>
       ) : (

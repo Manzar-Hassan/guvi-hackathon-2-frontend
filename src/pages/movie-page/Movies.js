@@ -45,7 +45,7 @@ const MovieCards = () => {
     poster: "",
     cost: 0,
   });
-  const { ticketDetails, setTicketDetails, loginUser } =
+  const { ticketDetails, setTicketDetails, loginUser, setTicketCost } =
     useContext(UserContext);
   const navigate = useNavigate();
 
@@ -92,7 +92,11 @@ const MovieCards = () => {
   };
 
   const modalHandler = (e) => {
-    setTicketDetails({ ...ticketDetails, name: e.target.id });
+    setTicketDetails({
+      ...ticketDetails,
+      name: e.target.id,
+    });
+    setTicketCost(+e.target.name);
     setOpen(true);
   };
 
@@ -147,6 +151,7 @@ const MovieCards = () => {
                         </Typography>
                         <Button
                           id={movie.name}
+                          name={movie.cost}
                           variant="contained"
                           onClick={modalHandler}
                         >

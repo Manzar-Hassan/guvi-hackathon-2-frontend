@@ -5,15 +5,16 @@ const UserContext = createContext("");
 export function UserProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [ticketCost, setTicketCost] = useState(false);
   const [loginUser, setLoginUser] = useState("");
   const [ticketDetails, setTicketDetails] = useState({
+    screen: "Screen-1",
     username: "",
     name: "",
     time: "",
     quantity: 0,
     ticketId: [],
     total: 0,
-    screen: "Screen-1",
   });
 
   return (
@@ -21,6 +22,8 @@ export function UserProvider({ children }) {
       value={{
         isAdmin,
         setIsAdmin,
+        ticketCost,
+        setTicketCost,
         loginUser,
         setLoginUser,
         ticketDetails,

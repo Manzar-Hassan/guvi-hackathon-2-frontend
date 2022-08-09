@@ -10,7 +10,6 @@ import Ticket from "./pages/Ticket-page/Ticket";
 import { UserProvider } from "./context/UserContext";
 
 const App = () => {
-
   return (
     <UserProvider>
       <BrowserRouter>
