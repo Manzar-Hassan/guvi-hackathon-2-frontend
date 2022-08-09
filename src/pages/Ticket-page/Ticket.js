@@ -11,7 +11,17 @@ import {
   Toolbar,
   CircularProgress,
   Modal,
+  Fab,
+  Tooltip,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import Navbar from "../../components/Navbar/Navbar";
 import CircleIcon from "@mui/icons-material/Circle";
 import SquareIcon from "@mui/icons-material/Square";
@@ -28,8 +38,10 @@ const style = {
 const Ticket = () => {
   const [seats, setSeats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reservedUsers, setReservedUsers] = useState(false);
   const [prevUserWarning, setPrevUserWarning] = useState("");
-  const { ticketDetails, setTicketDetails } = useContext(UserContext);
+  const { ticketDetails, setTicketDetails, loginUser } =
+    useContext(UserContext);
   const navigate = useNavigate();
 
   const getSeatsInfo = async () => {
@@ -49,6 +61,7 @@ const Ticket = () => {
 
     const url = `https://manzar-05.herokuapp.com/theatre/${id}`;
     const status = prevSeatStatus === "" ? { status: false } : { status: "" };
+
     setLoading(true);
 
     try {
@@ -85,6 +98,7 @@ const Ticket = () => {
     const status = { status: true };
     const url = `https://manzar-05.herokuapp.com/theatre/`;
 
+    setTicketDetails({ ...ticketDetails, username: loginUser });
     setLoading(true);
     clearTimeout(prevUserWarning);
 
@@ -94,7 +108,7 @@ const Ticket = () => {
       }
       getSeatsInfo();
       setLoading(false);
-      navigate("/payment")
+      navigate("/payment");
     } catch (error) {
       console.log(error);
     }
@@ -279,6 +293,77 @@ const Ticket = () => {
           <CircularProgress color="primary" />
         </Box>
       </Modal>
+
+      {/* admin button */}
+      <Modal
+        open={reservedUsers}
+        onClose={() => setReservedUsers(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxWidth: 650,
+            left: "30%",
+            top: "30%",
+            position: "fixed",
+            maxHeight: 800,
+          }}
+        >
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ align: "right", fontWeight: "bold" }}>
+                  Username
+                </TableCell>
+                <TableCell sx={{ align: "right", fontWeight: "bold" }}>
+                  Total Tickets
+                </TableCell>
+                <TableCell sx={{ align: "right", fontWeight: "bold" }}>
+                  Movie Name
+                </TableCell>
+                <TableCell sx={{ align: "right", fontWeight: "bold" }}>
+                  Seat Number
+                </TableCell>
+                <TableCell sx={{ align: "right", fontWeight: "bold" }}>
+                  Total(Rs.)
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  aaa
+                </TableCell>
+                <TableCell align="center">bbb</TableCell>
+                <TableCell align="center">ccc</TableCell>
+                <TableCell align="center">ccc</TableCell>
+                <TableCell align="center">ccc</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Modal>
+      {loginUser === "manzar" ? (
+        <Tooltip
+          title="Delete"
+          onClick={() => setReservedUsers(true)}
+          sx={{
+            position: "fixed",
+            bottom: 20,
+            left: { xs: "calc(50% - 25px)", md: 30 },
+          }}
+        >
+          <Fab color="primary" aria-label="add">
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

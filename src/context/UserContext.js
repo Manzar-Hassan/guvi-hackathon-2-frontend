@@ -3,16 +3,17 @@ import { createContext, useState } from "react";
 const UserContext = createContext("");
 
 export function UserProvider({ children }) {
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginUser, setLoginUser] = useState("");
   const [ticketDetails, setTicketDetails] = useState({
+    username: "",
     name: "",
     time: "",
     quantity: 0,
-    ticketId:[],
+    ticketId: [],
     total: 0,
-    screen: "Screen-1"
+    screen: "Screen-1",
   });
 
   return (
