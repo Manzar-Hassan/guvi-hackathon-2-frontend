@@ -26,7 +26,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import SquareIcon from "@mui/icons-material/Square";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import axios from "axios";
 
 const style = {
@@ -99,6 +99,8 @@ const Ticket = () => {
     const status = { status: true };
     const url = `https://manzar-05.herokuapp.com/theatre/`;
     const ticketURL = "https://manzar-05.herokuapp.com/add-ticket";
+
+    if (ticketDetails.quantity < 1) return;
 
     setLoading(true);
     clearTimeout(prevUserWarning);
@@ -354,9 +356,7 @@ const Ticket = () => {
                   <TableCell align="center">{ticket.username}</TableCell>
                   <TableCell align="center">{ticket.quantity}</TableCell>
                   <TableCell align="center">{ticket.name}</TableCell>
-                  <TableCell align="center">
-                    {ticket.ticketId}
-                  </TableCell>
+                  <TableCell align="center">{ticket.ticketId}</TableCell>
                   <TableCell align="center">{ticket.total}</TableCell>
                 </TableRow>
               ))}
