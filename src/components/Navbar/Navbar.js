@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AppBar, Avatar, Box, Stack, Toolbar, Typography } from "@mui/material";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import UserContext from "../../context/UserContext";

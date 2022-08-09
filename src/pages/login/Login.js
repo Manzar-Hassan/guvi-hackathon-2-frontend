@@ -11,9 +11,6 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-// <ToastContainer />
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import React, { useContext, useState } from "react";
@@ -29,7 +26,8 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn } = useContext(UserContext);
+  const { setLoginUser, setIsLoggedIn, setIsAdmin, loginUser } =
+    useContext(UserContext);
 
   const handlePassVisibilty = () => {
     setValues(!values);
@@ -61,15 +59,14 @@ const Login = () => {
     try {
       const data = await axios.post(url, credentials);
       setLoading(false);
-      console.log(data)
-      if (data.status===200) {
+      if (data.status === 200) {
         setLoginUser(credentials.username);
+        loginUser === "manzar" ? setIsAdmin(true) : setIsAdmin(false);
         setIsLoggedIn(true);
         navigate("/movies");
-
       } else {
         setLoading(false);
-        alert("Incorrect Credentials!!")
+        alert("Incorrect Credentials!!");
       }
     } catch (error) {
       console.log(error);
@@ -79,8 +76,6 @@ const Login = () => {
   return (
     <Box sx={{ background: "#212529", minHeight: "100vh" }}>
       <Container maxWidth="sm">
-        {console.log(credentials)}
-        {console.log(credentials.username.length)}
         <Grid
           container
           spacing={2}

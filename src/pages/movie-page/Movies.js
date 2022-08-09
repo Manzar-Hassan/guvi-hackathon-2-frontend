@@ -30,14 +30,13 @@ const style = {
 
 const MovieCards = () => {
   const [open, setOpen] = useState(false);
-  const [time, setTime] = useState("");
   const [movies, setmovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const { ticketDetails, setTicketDetails } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleChange = (event) => {
-    setTime(event.target.value);
+    setTicketDetails({ ...ticketDetails, time: event.target.value });
   };
 
   const getMovies = async () => {
@@ -52,7 +51,6 @@ const MovieCards = () => {
   };
 
   const ticketHandler = () => {
-    setTicketDetails({ ...ticketDetails, time });
     if (ticketDetails.time === "") {
       alert("please choose show time!!");
       return;
@@ -78,7 +76,8 @@ const MovieCards = () => {
           <CircularProgress color="secondary" className="mx-auto" />
         </Toolbar>
       ) : (
-        <section className="py-5 bg-secondary">
+        <section className="py-5" style={{ background: "#212529" }}>
+          {console.log(ticketDetails)}
           <div className="container px-4 px-lg-5 mt-5">
             <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
               {movies.map((movie) => (
@@ -86,7 +85,7 @@ const MovieCards = () => {
                   <div className="card">
                     <img
                       className="card-img-top"
-                      src={movie.posterUrl}
+                      src={movie.poster}
                       alt="product"
                     />
                     <div className="card-body p-4">
@@ -97,11 +96,13 @@ const MovieCards = () => {
                           fontWeight="bold"
                           mb={1}
                         >
-                          {movie.title}
-                          <Typography fontWeight="bold">(Rs.250)</Typography>
+                          {movie.name}
+                          <Typography fontWeight="bold">
+                            (Rs.{movie.cost})
+                          </Typography>
                         </Typography>
                         <Button
-                          id={movie.title}
+                          id={movie.name}
                           variant="contained"
                           onClick={modalHandler}
                         >
@@ -144,7 +145,7 @@ const MovieCards = () => {
                 select
                 label="Select Time"
                 helperText="Please Select Time"
-                value={time}
+                value={ticketDetails.time}
                 onChange={handleChange}
               >
                 <MenuItem value="9:00 AM">9:00 AM</MenuItem>

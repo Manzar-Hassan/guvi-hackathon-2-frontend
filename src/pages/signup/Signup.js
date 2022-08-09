@@ -53,9 +53,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-secondary">
+    <div style={{background: "#212529"}}>
       <Container maxWidth="sm">
-        {console.log(signDetails)}
         <Grid
           container
           spacing={2}

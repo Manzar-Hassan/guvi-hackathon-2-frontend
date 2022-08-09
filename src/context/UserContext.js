@@ -3,8 +3,9 @@ import { createContext, useState } from "react";
 const UserContext = createContext("");
 
 export function UserProvider({ children }) {
-  const [loginUser, setLoginUser] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginUser, setLoginUser] = useState("");
   const [ticketDetails, setTicketDetails] = useState({
     name: "",
     time: "",
@@ -17,6 +18,8 @@ export function UserProvider({ children }) {
   return (
     <UserContext.Provider
       value={{
+        isAdmin,
+        setIsAdmin,
         loginUser,
         setLoginUser,
         ticketDetails,
