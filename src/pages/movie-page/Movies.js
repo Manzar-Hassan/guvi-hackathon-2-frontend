@@ -98,12 +98,12 @@ const MovieCards = () => {
 
   const handleDelete = async (id) => {
     const url = `https://manzar-05.herokuapp.com/movies/${id}`;
-    setLoading(true)
+    setLoading(true);
 
     try {
       await axios.delete(url);
       getMovies();
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -152,14 +152,18 @@ const MovieCards = () => {
                         >
                           Book
                         </Button>
-                        <IconButton
-                          aria-label="delete"
-                          size="large"
-                          color="error"
-                          onClick={() => handleDelete(movie.id)}
-                        >
-                          <DeleteIcon fontSize="inherit" />
-                        </IconButton>
+                        {loginUser === "manzar" ? (
+                          <IconButton
+                            aria-label="delete"
+                            size="large"
+                            color="error"
+                            onClick={() => handleDelete(movie.id)}
+                          >
+                            <DeleteIcon fontSize="inherit" />
+                          </IconButton>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   </div>
