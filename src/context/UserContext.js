@@ -4,9 +4,9 @@ const UserContext = createContext("");
 
 export function UserProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("userLoggedIn"));
   const [ticketCost, setTicketCost] = useState(false);
-  const [loginUser, setLoginUser] = useState("");
+  const [loginUser, setLoginUser] = useState(localStorage.getItem("username"));
   const [ticketDetails, setTicketDetails] = useState({
     screen: "Screen-1",
     username: "",

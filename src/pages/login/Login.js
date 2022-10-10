@@ -66,6 +66,8 @@ const Login = () => {
       if (data.status === 200) {
         setLoginUser(credentials.username);
         setIsLoggedIn(true);
+        localStorage.setItem("userLoggedIn", true);
+        localStorage.setItem("username", credentials.username);
         navigate("/movies");
       } else {
         setLoading(false);
