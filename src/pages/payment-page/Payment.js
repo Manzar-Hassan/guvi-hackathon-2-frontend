@@ -26,6 +26,7 @@ const Payment = () => {
 
   const handleClick = () => {
     setOpen(true);
+    redirectToCheckout();
   };
 
   const handleClose = (event, reason) => {
@@ -34,11 +35,6 @@ const Payment = () => {
     }
 
     setOpen(false);
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    redirectToCheckout();
   };
 
   useEffect(() => {
@@ -95,7 +91,7 @@ const Payment = () => {
           style={{ minHeight: "100vh" }}
         >
           <Paper elelvation={2} sx={{ padding: 5 }}>
-            <form onSubmit={submitHandler}>
+            <form>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <Button
