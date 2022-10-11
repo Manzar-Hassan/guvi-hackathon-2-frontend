@@ -26,8 +26,13 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn, ticketDetails, setTicketDetails, isLoggedIn } =
-    useContext(UserContext);
+  const {
+    setLoginUser,
+    setIsLoggedIn,
+    ticketDetails,
+    setTicketDetails,
+    isLoggedIn,
+  } = useContext(UserContext);
 
   const handlePassVisibilty = () => {
     setValues(!values);
@@ -78,11 +83,11 @@ const Login = () => {
     }
   };
 
-  useEffect(()=>{
-    if(isLoggedIn) {
-      navigate("/movies")
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/movies");
     }
-  },[isLoggedIn])
+  }, [isLoggedIn, navigate]);
 
   return (
     <Box sx={{ background: "#212529", minHeight: "100vh" }}>
