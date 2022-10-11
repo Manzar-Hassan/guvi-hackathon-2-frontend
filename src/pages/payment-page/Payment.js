@@ -7,8 +7,6 @@ import {
   Button,
   Grid,
   Paper,
-  Avatar,
-  Box,
   Snackbar,
 } from "@mui/material";
 import UserContext from "../../context/UserContext";
@@ -97,15 +95,6 @@ const Payment = () => {
           style={{ minHeight: "100vh" }}
         >
           <Paper elelvation={2} sx={{ padding: 5 }}>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Avatar
-                sx={{
-                  height: "100px",
-                  width: "100px",
-                  marginBottom: "10px",
-                }}
-              />
-            </Box>
             <form onSubmit={submitHandler}>
               <Grid container direction="column" spacing={2}>
                 <Grid item>

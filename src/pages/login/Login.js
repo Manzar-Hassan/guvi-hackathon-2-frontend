@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
@@ -26,7 +26,7 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
-  const { setLoginUser, setIsLoggedIn, ticketDetails, setTicketDetails } =
+  const { setLoginUser, setIsLoggedIn, ticketDetails, setTicketDetails, isLoggedIn } =
     useContext(UserContext);
 
   const handlePassVisibilty = () => {
@@ -77,6 +77,12 @@ const Login = () => {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    if(isLoggedIn) {
+      navigate("/movies")
+    }
+  },[isLoggedIn])
 
   return (
     <Box sx={{ background: "#212529", minHeight: "100vh" }}>
