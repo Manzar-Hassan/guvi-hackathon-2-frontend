@@ -104,7 +104,7 @@ const Payment = () => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        message="redirecting to Payment Checkout!!"
+        message="redirecting to Payment Checkout...."
         action={action}
       />
     </div>
