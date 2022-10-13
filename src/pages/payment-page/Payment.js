@@ -2,13 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Container,
-  Button,
-  Grid,
-  Paper,
-  Snackbar,
-} from "@mui/material";
+import { Container, Button, Grid, Paper, Snackbar } from "@mui/material";
 import UserContext from "../../context/UserContext";
 
 let stripePromise;
