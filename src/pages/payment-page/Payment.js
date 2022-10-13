@@ -18,7 +18,8 @@ const Payment = () => {
   const [items, setItems] = useState([]);
   const { ticketDetails, ticketCost } = useContext(UserContext);
 
-  const handleClick = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setOpen(true);
     redirectToCheckout();
   };
@@ -85,18 +86,19 @@ const Payment = () => {
           style={{ minHeight: "100vh" }}
         >
           <Paper elelvation={2} sx={{ padding: 5 }}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <form onSubmit={handleSubmit}>
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
-                    onClick={handleClick}
                   >
                     Proceed to Pay
                   </Button>
-                </Grid>
+                </form>
               </Grid>
+            </Grid>
           </Paper>
         </Grid>
       </Container>
