@@ -85,7 +85,6 @@ const Payment = () => {
           style={{ minHeight: "100vh" }}
         >
           <Paper elelvation={2} sx={{ padding: 5 }}>
-            <form>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <Button
@@ -98,7 +97,6 @@ const Payment = () => {
                   </Button>
                 </Grid>
               </Grid>
-            </form>
           </Paper>
         </Grid>
       </Container>
