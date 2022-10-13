@@ -18,20 +18,6 @@ const Payment = () => {
   const [items, setItems] = useState([]);
   const { ticketDetails, ticketCost } = useContext(UserContext);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setOpen(true);
-    redirectToCheckout();
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   useEffect(() => {
     if (ticketDetails.ticketId.length) {
       setItems(
@@ -43,6 +29,7 @@ const Payment = () => {
     }
   }, [ticketDetails.ticketId, ticketDetails.quantity, ticketCost]);
 
+  
   const checkoutOptions = {
     lineItems: items,
     mode: "payment",
@@ -51,12 +38,21 @@ const Payment = () => {
   };
 
   const redirectToCheckout = async () => {
+    setOpen(true);
     const stripe = await getStripe();
     const { error } = await stripe.redirectToCheckout(checkoutOptions);
     if (error) {
       alert(error.message);
       return;
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   const action = (
@@ -88,7 +84,7 @@ const Payment = () => {
           <Paper elelvation={2} sx={{ padding: 5 }}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={redirectToCheckout}>
                   <Button
                     type="submit"
                     fullWidth
